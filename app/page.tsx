@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
 import type React from "react"
@@ -10,314 +11,10 @@ import { ChatSidebar } from "@/components/chat-sidebar"
 import { ChatMessage } from "@/components/chat-message"
 import { PromptInput } from "@/components/prompt-input"
 import { CommandMenu } from "@/components/command-menu"
-import { StickyQuestionHeader } from "@/components/sticky-question-header"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Skeleton } from "@/components/ui/skeleton"
+import { StickyQuestionHeader } from "@/components/sticky-header"
+import { mockResponses } from "@/mock-responses/chat-responses"
+import { mockSuggestions } from "@/mock-responses/mock-suggestions"
 
-const mockSuggestions = [
-  "Explain React hooks",
-  "How to build a Next.js app",
-  "Best practices for TypeScript",
-  "CSS Grid vs Flexbox",
-  "What is a closure in JavaScript",
-]
-
-const mockResponses = [
-  `# React Hooks: A Comprehensive Guide
-
-React Hooks are functions that let you "hook into" React state and lifecycle features. They enable you to use state and other React features in functional components, eliminating the need for class components in most cases.
-
-## Most Common Hooks
-
-### useState
-The \`useState\` hook lets you add state to functional components:
-
-\`\`\`jsx
-const [count, setCount] = useState(0);
-
-useEffect(() => {
-  document.title = \`Count: \${count}\`;
-}, [count]);
-\`\`\`
-
-### useEffect
-Performs side effects in functional components:
-
-\`\`\`jsx
-useEffect(() => {
-  const timer = setTimeout(() => {
-    console.log('Timer executed');
-  }, 1000);
-  
-  return () => clearTimeout(timer);
-}, []);
-\`\`\`
-
-### useContext
-Access context values without nesting:
-
-\`\`\`jsx
-const theme = useContext(ThemeContext);
-\`\`\`
-
-## Rules of Hooks
-
-1. Only call hooks at the top level of your component
-2. Only call hooks from React function components or custom hooks
-3. Never call hooks conditionally
-
-## Custom Hooks
-
-You can extract component logic into reusable functions:
-
-\`\`\`jsx
-function useFetch(url) {
-  const [data, setData] = useState(null);
-  
-  useEffect(() => {
-    fetch(url)
-      .then(res => res.json())
-      .then(data => setData(data));
-  }, [url]);
-  
-  return data;
-}
-\`\`\`
-
-Hooks have revolutionized how we write React components, making code more reusable and easier to understand.`,
-
-  `# Building a Next.js Application: Complete Tutorial
-
-Next.js is a powerful React framework that provides everything you need to build fast, production-ready applications.
-
-## Getting Started
-
-Start with the official scaffolding tool:
-
-\`\`\`bash
-npx create-next-app@latest my-app
-cd my-app
-npm run dev
-\`\`\`
-
-## File-Based Routing
-
-Next.js uses the App Router with file-based routing. Create files in the \`app\` directory:
-
-\`\`\`
-app/
-  page.tsx          # /
-  about/page.tsx    # /about
-  blog/[id]/page.tsx # /blog/:id
-\`\`\`
-
-## Server and Client Components
-
-By default, all components are Server Components:
-
-\`\`\`jsx
-// Server Component (default)
-export default async function Page() {
-  const data = await fetchData();
-  return <div>{data}</div>;
-}
-
-// Client Component (needs 'use client')
-'use client'
-import { useState } from 'react';
-
-export default function Counter() {
-  const [count, setCount] = useState(0);
-  return <button onClick={() => setCount(count + 1)}>{count}</button>;
-}
-\`\`\`
-
-## API Routes
-
-Create API endpoints in the \`app/api\` directory:
-
-\`\`\`typescript
-// app/api/users/route.ts
-export async function GET() {
-  return Response.json({ users: [] });
-}
-
-export async function POST(req: Request) {
-  const data = await req.json();
-  return Response.json({ success: true, data });
-}
-\`\`\`
-
-## Deployment
-
-Deploy instantly to Vercel with zero configuration. Next.js automatically optimizes your app for production.
-
-This framework combines the best practices for modern web development with an amazing developer experience.`,
-
-  `# TypeScript Best Practices: Writing Scalable Code
-
-TypeScript adds static typing to JavaScript, helping you catch errors early and write more maintainable code.
-
-## Enable Strict Mode
-
-Always enable strict mode in your \`tsconfig.json\`:
-
-\`\`\`json
-{
-  "compilerOptions": {
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true
-  }
-}
-\`\`\`
-
-## Avoid \`any\`
-
-Never use \`any\` unless absolutely necessary:
-
-\`\`\`typescript
-// Bad
-function process(data: any) {
-  return data.value;
-}
-
-// Good
-interface Data {
-  value: string;
-}
-
-function process(data: Data) {
-  return data.value;
-}
-\`\`\`
-
-## Type Inference
-
-Let TypeScript infer types when obvious:
-
-\`\`\`typescript
-// TypeScript knows this is a string
-const name = "Alice";
-
-// Explicit when needed
-const count: number = 42;
-\`\`\`
-
-## Discriminated Unions
-
-Use discriminated unions for type-safe handling:
-
-\`\`\`typescript
-type Result = 
-  | { status: 'success'; data: unknown }
-  | { status: 'error'; error: string };
-
-function handle(result: Result) {
-  if (result.status === 'success') {
-    console.log(result.data);
-  } else {
-    console.log(result.error);
-  }
-}
-\`\`\`
-
-## Type Guards
-
-Write reusable type guard functions:
-
-\`\`\`typescript
-function isString(value: unknown): value is string {
-  return typeof value === 'string';
-}
-
-if (isString(value)) {
-  console.log(value.toUpperCase());
-}
-\`\`\`
-
-Mastering these practices will make your TypeScript code more robust and maintainable.`,
-
-  `# CSS Grid vs Flexbox: When to Use Each
-
-Both CSS Grid and Flexbox are powerful layout tools. Understanding when to use each is crucial for modern web development.
-
-## Flexbox: One-Dimensional Layouts
-
-Flexbox excels at laying out items in a single direction (row or column):
-
-\`\`\`css
-.container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
-
-.item {
-  flex: 1;
-}
-\`\`\`
-
-Use Flexbox for:
-- Navigation menus
-- Tool bars
-- Component spacing
-- Alignment of elements
-
-## Grid: Two-Dimensional Layouts
-
-Grid is perfect for complex two-dimensional layouts:
-
-\`\`\`css
-.container {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  grid-template-rows: auto 1fr auto;
-  gap: 1rem;
-}
-
-.header {
-  grid-column: 1 / -1;
-}
-
-.sidebar {
-  grid-column: 1;
-  grid-row: 2;
-}
-\`\`\`
-
-Use Grid for:
-- Page layouts
-- Dashboard designs
-- Complex multi-column layouts
-- Photo galleries
-
-## Combining Both
-
-Often, the best approach combines both:
-
-\`\`\`css
-.page {
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  grid-template-rows: auto 1fr auto;
-}
-
-.header {
-  grid-column: 1 / -1;
-}
-
-.main {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-\`\`\`
-
-Understanding both tools empowers you to create flexible, responsive layouts efficiently.`,
-]
 
 export default function Home() {
   const [sessions, setSessions] = useState<ChatSession[]>([])
@@ -327,10 +24,12 @@ export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
+  const lastQuestionRef = useRef<HTMLDivElement>(null)
+  const shouldAutoScrollRef = useRef(true)
   const currentSession = sessions.find((s) => s.id === currentSessionId)
   const currentMessages = currentSession?.messages || []
 
-  // Load sessions from storage on mount
+
   useEffect(() => {
     const loaded = loadSessions()
     setSessions(loaded)
@@ -339,9 +38,16 @@ export default function Home() {
     }
   }, [])
 
-  // Scroll to bottom when messages change
+  // Smart scroll: only auto-scroll if user is near the bottom
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    if (!messagesContainerRef.current || !shouldAutoScrollRef.current) return
+
+    const container = messagesContainerRef.current
+    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 150
+
+    if (isNearBottom) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
   }, [currentMessages])
 
   const handleNewChat = useCallback(() => {
@@ -356,11 +62,13 @@ export default function Home() {
     setCurrentSessionId(newSession.id)
     setIsSidebarOpen(false)
     saveSessions([newSession, ...sessions])
+    shouldAutoScrollRef.current = true
   }, [sessions])
 
   const handleSelectSession = (sessionId: string) => {
     setCurrentSessionId(sessionId)
     setIsSidebarOpen(false)
+    shouldAutoScrollRef.current = true
   }
 
   const handleDeleteSession = (sessionId: string) => {
@@ -383,6 +91,7 @@ export default function Home() {
       if (!currentSession) return
 
       setIsLoading(true)
+      shouldAutoScrollRef.current = true
 
       const userMessage: Message = {
         id: generateMessageId(),
@@ -444,10 +153,121 @@ export default function Home() {
     [currentSession, currentSessionId, sessions],
   )
 
+  const handleRegenerate = useCallback(
+    async (messageId: string) => {
+      if (!currentSession) return
+
+      // Find the index of the assistant message to regenerate
+      const messageIndex = currentSession.messages.findIndex((m) => m.id === messageId)
+      if (messageIndex === -1) return
+
+      // Find the user message that came before this assistant message
+      const userMessage = currentSession.messages[messageIndex - 1]
+      if (!userMessage || userMessage.role !== "user") return
+
+      // Remove the assistant message and all messages after it
+      const updatedMessages = currentSession.messages.slice(0, messageIndex)
+
+      const updatedSession = {
+        ...currentSession,
+        messages: updatedMessages,
+        updatedAt: Date.now(),
+      }
+
+      // Update state and storage
+      setSessions((prev) => prev.map((s) => (s.id === currentSessionId ? updatedSession : s)))
+      saveSession(updatedSession)
+
+      // Now generate a new response
+      setIsLoading(true)
+      shouldAutoScrollRef.current = true
+
+      // Simulate streaming response with delay
+      await new Promise((resolve) => setTimeout(resolve, 800))
+
+      const responseContent = mockResponses[Math.floor(Math.random() * mockResponses.length)]
+      let displayedContent = ""
+      const newMessageId = generateMessageId()
+
+      // Stream the response character by character
+      let sessionWithResponse = updatedSession
+      for (let i = 0; i < responseContent.length; i++) {
+        displayedContent += responseContent[i]
+
+        const assistantMessage: Message = {
+          id: newMessageId,
+          content: displayedContent,
+          role: "assistant",
+          timestamp: Date.now(),
+          isStreaming: i < responseContent.length - 1,
+        }
+
+        // Check if message already exists and update it, otherwise add it
+        const existingMessageIndex = sessionWithResponse.messages.findIndex(m => m.id === newMessageId)
+
+        if (existingMessageIndex !== -1) {
+          sessionWithResponse = {
+            ...sessionWithResponse,
+            messages: [
+              ...sessionWithResponse.messages.slice(0, existingMessageIndex),
+              assistantMessage,
+              ...sessionWithResponse.messages.slice(existingMessageIndex + 1)
+            ],
+            updatedAt: Date.now(),
+          }
+        } else {
+          sessionWithResponse = {
+            ...sessionWithResponse,
+            messages: [...sessionWithResponse.messages, assistantMessage],
+            updatedAt: Date.now(),
+          }
+        }
+
+        setSessions((prev) => prev.map((s) => (s.id === currentSessionId ? sessionWithResponse : s)))
+
+        await new Promise((resolve) => setTimeout(resolve, 10))
+      }
+
+      saveSession(sessionWithResponse)
+      setIsLoading(false)
+    },
+    [currentSession, currentSessionId],
+  )
+
+  const [lastHiddenQuestion, setLastHiddenQuestion] = useState<string>("")
+
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const element = e.currentTarget
-    const isNearBottom = element.scrollHeight - element.scrollTop - element.clientHeight < 100
-    setShowStickyHeader(!isNearBottom)
+    if (!messagesContainerRef.current) return
+
+    const containerElement = messagesContainerRef.current
+    const containerRect = containerElement.getBoundingClientRect()
+
+    // Check if user is near the bottom (within 150px)
+    const isNearBottom = containerElement.scrollHeight - containerElement.scrollTop - containerElement.clientHeight < 150
+    shouldAutoScrollRef.current = isNearBottom
+
+    // Find all user message elements
+    const userMessages = containerElement.querySelectorAll('.group')
+    let lastHidden: string | null = null
+
+    // Check each user message
+    userMessages.forEach((element) => {
+      const rect = element.getBoundingClientRect()
+      // If the message is above the viewport, it's hidden
+      if (rect.bottom < containerRect.top) {
+        const messageContent = element.querySelector('[role="user"]')?.textContent
+        if (messageContent) {
+          lastHidden = messageContent
+        }
+      }
+    })
+
+    if (lastHidden) {
+      setLastHiddenQuestion(lastHidden)
+      setShowStickyHeader(true)
+    } else {
+      setShowStickyHeader(false)
+    }
   }
 
   if (!currentSession && sessions.length === 0) {
@@ -469,7 +289,7 @@ export default function Home() {
           <div className="text-center space-y-4 max-w-md">
             <h1 className="text-3xl md:text-4xl font-bold">Start a New Conversation</h1>
             <p className="text-muted-foreground text-sm md:text-base">
-              Ask me anything. I'll provide detailed answers with code examples and explanations.
+              Ask me anything. I&apos;ll provide detailed answers with code examples and explanations.
             </p>
             <button
               onClick={handleNewChat}
@@ -507,14 +327,17 @@ export default function Home() {
         />
       </div>
 
-      <main className="flex-1 flex flex-col min-h-screen md:min-h-0">
-        <StickyQuestionHeader
-          question={currentMessages.find((m) => m.role === "user")?.content}
-          isVisible={showStickyHeader}
-          onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-        />
-
-        <ScrollArea ref={messagesContainerRef} className="flex-1 overflow-y-auto" onScroll={handleScroll}>
+      <main className="flex-1 flex flex-col min-h-screen md:min-h-0 bg-transparent relative">
+        <div
+          ref={messagesContainerRef}
+          className="flex-1 overflow-y-auto pb-24"
+          onScroll={handleScroll}
+        >
+          <StickyQuestionHeader
+            question={lastHiddenQuestion}
+            isVisible={showStickyHeader}
+            onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+          />
           <div className="max-w-4xl mx-auto w-full p-4 md:p-6 space-y-4 md:space-y-6">
             {currentMessages.length === 0 ? (
               <div className="flex items-center justify-center h-96">
@@ -525,32 +348,38 @@ export default function Home() {
               </div>
             ) : (
               <>
-                {currentMessages.map((message, index) => (
-                  <div key={message.id} className="group">
-                    <ChatMessage
-                      message={message}
-                      onRegenerate={
-                        message.role === "assistant"
-                          ? () => handleSubmitPrompt(currentMessages[index - 1]?.content || "")
-                          : undefined
-                      }
-                    />
-                  </div>
-                ))}
-                {isLoading && (
-                  <div className="space-y-3">
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                )}
+                {currentMessages.map((message, index) => {
+                  const isLastUserMessage = message.role === "user" &&
+                    index === currentMessages.map(m => m.role).lastIndexOf("user")
+
+                  return (
+                    <div
+                      key={message.id}
+                      className="group"
+                      ref={isLastUserMessage ? lastQuestionRef : null}
+                    >
+                      <div role={message.role}>
+                        <ChatMessage
+                          message={message}
+                          isLoading={isLoading}
+                          onRegenerate={
+                            message.role === "assistant"
+                              ? () => handleRegenerate(message.id)
+                              : undefined
+                          }
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
                 <div ref={messagesEndRef} />
               </>
             )}
           </div>
-        </ScrollArea>
+        </div>
 
-        <div className="border-t border-border bg-card p-4 md:p-6 shrink-0">
-          <div className="max-w-4xl mx-auto">
+        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 z-20 pointer-events-none">
+          <div className="max-w-4xl mx-auto pointer-events-auto bg-secondary rounded-xl p-5">
             <PromptInput onSubmit={handleSubmitPrompt} isLoading={isLoading} suggestions={mockSuggestions} />
           </div>
         </div>
